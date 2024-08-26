@@ -9,6 +9,7 @@ import (
 	"os"
 	"snippetbox/pkg/models/postgres"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -18,17 +19,21 @@ type app struct {
 	snippets *postgres.SnippetModel
 }
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "root"
-	password = "password"
-	dbname   = "snippetbox"
-)
 
 func Run() {
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	connStr := fmt.Sprintf("host=%s port=%d user=%s "+
+
+	err := godotenv.Load(".env")
+
+	var (
+		host     = os.Getenv("POSTGRES_HOST")
+		port     = os.Getenv("POSTGRES_PORT")
+		user     = os.Getenv("POSTGRES_USER")
+		password = os.Getenv("POSTGRES_PASSWORD")
+		dbname   = os.Getenv("POSTGRES_DB")
+	)
+
+	connStr := fmt.Sprintf("host=%s port=%s user=%s "+
 		"password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 

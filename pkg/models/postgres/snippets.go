@@ -65,8 +65,14 @@ func (m *SnippetModel) Latest(title, content, expires string) ([]*models.Snippet
 	snippets := []*models.Snippet{}
 	for rows.Next() {
 		s := &models.Snippet{}
+
 		err = rows.Scan(&s.Id, &s.Title, &s.Content, &s.CreatedAt, &s.ExpiresAt)
+		if err != nil {
+			return nil, err
+		}
+
+		snippets = append(snippets, s)
 	}
 
-	return nil, nil // replace
+	return snippets, nil // replace
 }
