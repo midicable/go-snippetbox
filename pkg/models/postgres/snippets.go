@@ -48,7 +48,7 @@ func (m *SnippetModel) Get(id int) (*models.Snippet, error) {
 	return s, nil
 }
 
-func (m *SnippetModel) Latest(title, content, expires string) ([]*models.Snippet, error) {
+func (m *SnippetModel) Latest() ([]*models.Snippet, error) {
 	query := `
 	SELECT *
 	FROM snippets
@@ -74,5 +74,5 @@ func (m *SnippetModel) Latest(title, content, expires string) ([]*models.Snippet
 		snippets = append(snippets, s)
 	}
 
-	return snippets, nil // replace
+	return snippets, nil
 }

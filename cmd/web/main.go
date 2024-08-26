@@ -7,9 +7,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"snippetbox/config"
 	"snippetbox/pkg/models/postgres"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -19,25 +19,15 @@ type app struct {
 	snippets *postgres.SnippetModel
 }
 
-
 func Run() {
+	// flags
 	addr := flag.String("addr", ":4000", "HTTP network address")
-
-	err := godotenv.Load(".env")
-
-	var (
-		host     = os.Getenv("POSTGRES_HOST")
-		port     = os.Getenv("POSTGRES_PORT")
-		user     = os.Getenv("POSTGRES_USER")
-		password = os.Getenv("POSTGRES_PASSWORD")
-		dbname   = os.Getenv("POSTGRES_DB")
-	)
-
-	connStr := fmt.Sprintf("host=%s port=%s user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
-
 	flag.Parse()
+
+	// config
+	dbConfig := config.New()
+	connStr := fmt.Sprintf("host=%s port=%s user=%s "+
+		"password=%s dbname=%s sslmode=disable", dbConfig.Host, dbConfig.Port, dbConfig.User, dbConfig.Password, dbConfig.DBName)
 
 	infoLog := log.New(os.Stdout, "[INFO]\t", log.LstdFlags)
 	errLog := log.New(os.Stderr, "[ERROR]\t", log.LstdFlags|log.Lshortfile)
